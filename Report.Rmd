@@ -1,0 +1,123 @@
+---
+title: "Report"
+output: html_document
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(error=TRUE)
+source('analysis.R')
+library(ggplot2)
+```
+##Metric Formulas
+
+Metric#1: Dissimilarity Index
+
+\[\frac { \sum _{ i=1 }^{ n }{ \left[ ti\left| pi-P \right|  \right]  }  }{ \left[ 2TP(1-P) \right]  } \]
+
+This metric is often used to measure the evenness of distributions of minority and majority populations in an area. This formula measures the percentage of a certain group's population that would have to move for each neighborhood to have the same percentage of that group as the metropolitan area overall. 0.0 is a completely integrated city while 1.0 is completely segregated city. In order to calculate this, this formula takes in arguments that involve the proportion of a particular area's population that is minority, the total proportion that a metropolitan area's population is minority, as well as the total population of the areas. All of these help to measure the distribution of minorities in areas. Using this metric is a good way to measure the evenness of how different populations are distributed, however there are aspects of segregation alone this metric is not able to measure/indicate such as where groups are located and contact between majority and minority population groups. As such this metric should be used to measure the eveness distribution aspect of segregation within a city.
+
+
+Metric #2: Interaction and Isolation
+
+Interaction
+\[\sum _{ i=1 }^{ n }{ [(\frac { xi }{ X } )(\frac { yi }{ ti } )] } \]
+
+Isolation
+\[ \sum _{ i=1 }^{ n }{ [(\frac { xi }{ X } )(\frac { xi }{ ti } )] } \]
+
+These metrics are related. They both measure exposure within a population. Exposure of a population measures how much potential contact/interaction occurs between minority and majority group members. 
+Both of these metrics involve measuring the probabilities that a person from a minority group shares a unit area with a person from a majority group or with another person from a minority group. They take in measures of total populations of minorities and majorities in an area as well as the total population in order to calculate these components. These metrics are useful in calculating contact/potential contact between minority and major group members but cannot account for other vital aspects in calculating segregation such as concerntration of these groups and location of these groups. It should thus just be used to measure th exposure aspect of segregation. This metric also is not ideal to use in the case of comparing multiple groups and different proportions causing asymmetry in the calculations.Lower values of interaction and higher values of isolation both indicate higher segregation.
+
+Metric #3: Correlation
+
+\[\frac { (I-P) }{ (1-P) }  \]
+
+Correlation is another metric that measures exposure within a population. Correlation differs from the above metrics that also measure exposure is that it this uses the isolation index and calculates exposure adjusting to the asymmetry that might occur when comparing multiple groups or differences in proportions. It does this by adjusting the isolation index to control for the asymmetry. In order to control for the asymmetry and adjust the isolation index, this metric also takes in the proportion of the metropolitan area's population that is minority. This metric is useful in measuring exposure among more than 2 groups. However, it is limited in that it depends on the isolation index, meaning two calculations need to be made in order to obtain this value. Because it is related to isolation, a higher correlation indicates higher segregation.
+
+##Metric Computation
+
+Here is each metric calculated for each of the 14 cities.
+
+```{r, echo=FALSE}
+dframe
+```
+
+
+##Metric Comparison
+
+For each metric, the measurement of segregation that is captured influences how the cities are ranked in terms of segregation. All of these are compiled below.
+
+```{r, echo=FALSE}
+new_data
+```
+
+This shows here that for the dissimilarity index, Oklahoma City has the lowest dissimilarity index (0.3217329) and Milwaukee has the highest(0.6187397). This suggests that in terms of the differential distribution of the minority population aspect of measuring segregation, Oklahoma City is the least segregated while Milwaukee is the most segregated out of the 14 cities.
+
+For the interaction and isolation metrics, they had opposite results, which is expected because they are opposite. Both of metrics indicate that in terms of the exposure aspect of segregation, Baltimore is the most segregated out of the 14 cities and Denver is the least segregated. This is because Baltimore has the highest isolation and lowest interaction values while Denver had the highest interaction but lowest isolation values.
+
+For the correlation ratio, Milwaukee had the highest correlation index while Denver had the lowest one. Because correlation relates directly with isolation, this metric indicates that Denver is the least segregated and Milwaukee is the more segregated. These results relate to the interaction and isolation results somewhat because isolation, interaction, and correlation are all measures of exposure. However, correlation adjusts for aysymmetry that sometimes occurs in isolation calculations involving multiple groups, which could be a reason why the result for the most segregated as per correlation was different than the interaction/isolation highest segregation result.
+
+The ranking of segregation definitely changed depending on the metric being used. This is because segregation is complex and cannot be measured by a single formula. Instead, multiple formulas need to be used to measure different aspects of it. These metrics all measure different aspects of segregation and thus some cities are more segregated in terms of one of the multiple measures of segregation and less segregated in terms of a different measure of segregation, changing the segregation ranking for each metric.
+
+The use of different metrics does yield a different understanding of comparison across cities. Because segregation is complex and has multiple components to it to measure, using different metrics means seeing segregation in terms of different particular measures/components, like different snapshots or views of the entire picture. The ideal way to measure is to compute multiple metrics from each of the different aspects that make up segregation to build a bigger picture of which cities are the most segregated.
+
+Here are some plots to visually display the data. These scatter plots show us trends in the data and how each of these metrics correlate.
+```{r, echo = FALSE}
+dissim <- dframe$Dissimilarity
+interact <- dframe$Interaction
+plot(dissim, interact, xlab = "Dissimilarity Index", ylab = "Interaction Index")
+abline(lm(interact ~ dissim))
+
+#Dissimilarity vs Correlation
+corr <- dframe$Correlation
+plot(dissim, corr, xlab = "Dissimilarity Index", ylab = "Correlation Index")
+abline(lm(corr ~ dissim))
+
+#Interaaction vs Correlation
+plot(interact, corr, xlab = "Interaction Index", ylab = "Correlation Index")
+abline(lm(corr ~ interact))
+
+```
+
+The first scatterplot shows a negative correlation between interaction and dissimilarity for these 14 cities. They both measure different aspects of segregation. A higher dissimilarity index indicates higher segregation while a lower interaction index indicates higher segregation, thus it makes sense that the two are negatively correlated.
+
+The second scatter plot compares dissimilarity with correlation index. The graph shows a positive correlation between the two. Many of the cities fall very close to the best fit line, suggesting a correlation between the two.
+
+The third scatterplot compares the interaction index with the correlation index. The graph suggests a correlation between the two, though not as strong as the correlation between dissimilarity and correlation index.
+
+Here are plots that show where each of the 14 cities show up in these spreads of data and where each city falls in relation to the trend. This shows that measuring different metrics causes different spreads in the data and show that certain cities may appear more segregated in terms of certain metrics than in terms of other metrics.
+```{r, echo=FALSE}
+qplot(dissim, interact, data = dframe, colour = names)
+qplot(dissim, corr, data = dframe, colour = names)
+qplot(interact, corr, data = dframe, colour = names)
+```
+
+Here are some box plots for the metrics that show the spread of the data for each metric.
+```{r, echo=FALSE}
+#boxplots
+print("Dissimilarity Index")
+boxplot(dissim)
+print("Interaction Index")
+boxplot(interact)
+print("Correlation Index")
+boxplot(corr)
+```
+
+These graphs show different ranges of values and different means for each of the different metrics.The dissimilarity graph indicates that most cities fall between the 0.35 to 0.55 range, showing some segregation in all of the 14 cities. The interaction index spread was similar in range from 0.4 to 0.6, showing some segregation in all of the 14 cities. The correlation index seemed to have a slightly wider range and lower average, suggesting lower segregation across the cities than the other metrics but also more of a spread in segregation across the cities than the other metrics.
+
+##Metric Proposal
+
+A new metric I would like to propose for evaluating segregation across the cities is a metric that measures how isolated a city is in reltion to its interaction index. 
+
+\[ (\frac { I }{ Int } )-Co\]
+*where 'I' is the isolation index, 'Int' in the interaction index and 'Co' is the Correlation index
+
+With this metric, you would be able to calculate the relationship between I and In. This can be useful in tracking the relationship between the two since they are both very similar. The metric will be most useful in comparisons, as you can immediately compare this metric for one city compared to the same metric for other cities, and it takes in all the elements of measuring the exposure aspect of segregation and also accounts for the correlation. From this statistic, it is possible immediately to see how much more isolated one city is from another in relation to it's interaction index. For example, it shows that Baltimore is the most isolated city while Denver is the least, suggesting that Baltimore is the most segregated city and Denver is the least in amongst the 14 cities.This is very similar to the isolation metric calcualtions in terms of ranking.
+
+Metric calculated for all 14 cities and a visualization of it:
+
+```{r, echo=FALSE}
+metric_df
+boxplot(metric_df$New.Metric)
+```
+
