@@ -1,0 +1,156 @@
+---
+title: "A4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(error=TRUE)
+source('A4.R')
+library(dplyr)
+library(stringr)
+library(ggplot2)
+```
+
+## A4 EDA
+
+We are measuring the effects of changing International Currency Rates on United States unemployment rates to see if there is any correlation between the two.
+
+###Data Prep
+
+Our data preparation involved both web scraping and cleaning up the data that we used. As a team, we web scraped off of the website to obtain the currency exchange data for the last ten years (python code in github repo) for the countries we had selected (the currency rates were in terms of US dollars). After that we used tools such as excel to build a master file that contained data from all of the countries and their currency exchange rates per month per year for the last ten years. We also managed to get a dataset online that had unemployment rates for the last ten years to compare it to. We decided to divide up the EDA work by country, the countries I will be focusing on in this EDA are India and Canada. 
+
+```{r}
+country_df <- read.csv(file="data.csv",head=TRUE,sep=",") #master file for all countries
+unemp_df <- read.csv(file = "unemployment.csv", head = TRUE, sep = ",") # US Unemployment rate data
+india_df <- read.csv(file = "indianrupee.csv", head = TRUE, sep = ",")
+canada_df <- read.csv(file = "canadiandollar.csv", head = TRUE, sep = ",")
+```
+###Describing data structure
+
+Here are the dimensions of all the data structures being analyzed:
+```{r}
+#country master data
+dim(country_df)
+
+#unemployment data
+dim(unemp_df)
+
+#Currency Rate data specific to India
+dim(india_df)
+
+#Currency Rate data specific to Canada
+dim(canada_df)
+```
+These dimensions correspond to how many years and countries are being taken in. Our overall analysis uses 8 countries total and spans ten years since 2017 for all sets of the data we are focusing on. The data looks at values for each month of the last ten years (making 20 obersvations). 
+The names of the countries we are looking into include India, Japan, China, South Korea, Canada, Brazil, Russia, and the European Union.
+```{r}
+names(country_df)
+```
+The data is continuous. We are measuring the change over time and if trends are correlated for two datasets to see if they possibly influence each other or are related in any way. For the country data, the values are measurements of average currency exchange rates per month for the last ten years (measured by US dollar base). For the unemployment data, the values are the unemployment rates during each month of the last ten years. Data from both data sets is continuous and we will be measuring changes through time for both.
+
+### Univariate analysis
+Here are some of the summary stats and examples of the data points to get more sense of the data:
+```{r}
+#for the overall country data
+str(country_df)
+head(country_df, n = 5)
+tail(country_df, n = 5)
+
+#for India's data 
+summary(country_df$India)
+
+#for Canada's data
+summary(country_df$Canada)
+
+# for the unemployment data set
+summary(unemp_df)
+head(unemp_df, n = 5)
+tail(unemp_df, n = 5)
+```
+
+In terms of the data as a whole in the currency rate data, here is what visualizations look like for both India and Canada look like for every month observation over the last ten years.
+```{r}
+a 
+b 
+```
+
+The data needs to be further analyzed to find a trend, at this point in the analysis there are too many observations to find some sort of a trend or pattern if one exists. 
+
+I then took the total average exchange rates for each country and graphed them to understand and get a sense visually of how the exchange rates differed between countries (in USD):
+
+```{r}
+c
+```
+South Korea's currency exchange value is visibly highest. While others such as Brazil and Canada are fairly close to USD.
+
+###Univariate analysis by Category
+
+In terms of analysis by Category, each of other datasets focuses on measuring one variable across time. The three categories I focused on thus were the unemployment rate across time and the Currency Rates across time for specifically India and Canada. In order to be able to generate better analysis, I further summarized the data by calculating averages for each of the data sets. 
+
+```{r}
+#Unemployment data with averages added
+head(dframe, n= 10)
+
+#India's CurrencyRate Data
+head(india_dframe, n= 10)
+
+head(can_dframe, n= 10)
+```
+This makes it much easier to graph and visualize trends. This data is thus analyzed from the yearly perspective, to see rates of change across the 10 years we are measuring from (2007 to 2017). Here are what the averages across the years look like for both India and then for Canada:
+
+```{r}
+#India
+ind_avg
+#Canada
+can_avg
+```
+The unemployment data average by year follows an interesting dramatic increase and fall trend:
+
+```{r}
+unemp
+```
+
+Analyzing by each of the specific categories brought forward something interesting visual trends to keep in mind as I move forward with my analysis.
+
+###Bivariate analysis
+
+For this analysis I wanted to test how each of these datasets related to each other and if there were any correlations.
+
+The first visual scatterplot I made was to compare the India Rupee's Currency Exchange Rate (yearly average) over time versus the yearly average US Unemployment Rate over time. For this graph, India's Currency Rate was red and the US unemployment rate was yellow.
+
+```{r}
+d
+```
+There is a noticeable consistent upward trend for India's Currency Rate while the US unemployment rate seems to spike around 2010. There isn't any noticeable correlations between the two.
+
+This following visualization was similar in what it compared before, however this instead shows the Canadian Dollar Exchange Rate (yearly average) over time verses the yearly average US Unemployment Rate over time. For this graph, Canada's currency rate is blue and the US unemployment rate is still yellow.
+
+```{r}
+e
+```
+While unemployment has a very sharp increase around 2010 (much more noticeable in this graph), the Canadian dollar exchange rate stays relatively consistent (rising slightly around 2015). There isn't any noticeable correlations between the two.
+
+
+I thought it would also be interesting to map the yearly average currency exchange rates over time for India versus Canada to get a visual sense of what that might look like as well. In this scatterplot, India is red and Canada is blue.
+
+```{r}
+f
+```
+
+Interestingly, India's exchange rate has steadily changed and increased (with some falls but otherwise a positive upward trend) while Canada's has stayed relatively consistent in comparison and has not had many major changes.
+
+In order to mathematically test for any statistically significant correlations, I also did linear regressions for both India's Exchange Rate vs the Unemployment Rate and Canada's Exchange Rate vs the Unemployment Rate. I chose linear regression because I was testing two continuous variables in both cases for this test.
+
+The first linear regression (US Unenployment Rate as a Function of India's Currency Exchange Rate) showed these results:
+```{r}
+summary(fit)
+```
+The second linear regression (US Unenployment Rate as a Function of Canada's Currency Exchange Rate) showed these results:
+```{r}
+summary(fit2)
+```
+Both showed insignificant p-values.
+
+###Summary of insights
+
+Overall, for all the visualizations and tests I did for the analysis done on the unemployment data vs. the currency rate changes for both India and Canada, there wasn't a significant enough relationship between the the country's currency exchange rate and the US unemployment rate to indicate any sort of correlation between them. There is a possibility that one of my teammates discovered a correlation between the US unemployment data and the current rate for a different country. From there, we will be able to do more thorough analysis. We wil have to further synthesize our master data with information for all the countries to do so. Also, one limitation in my analysis was having to use averages in order to visually graph, however they gave me some insight into how the data looked. I am excited to see if we find any trends with other countries.
