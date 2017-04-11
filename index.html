@@ -18,12 +18,12 @@
     <!-- Load jQuery library -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-    <!--Your script-->
+    <!--Script-->
     <script src="js/script.js"></script>
 </head>
 
 <body>
-    
+    <!--Header with Overall Information-->
     <header id = "container">
         <h1> Assignment 1: Design</h1>
         <h2>Antibiotic Effectiveness Visualizations</h2>
@@ -32,34 +32,55 @@
     </header>
 
     
+    <!--Main Body-->
     <div class = "container">
-        <div class = "firstViz">
+
+        <!--First Visualization + explanation-->
         <div id = "graphOne">
         </div>
+        <div id = "explanation">
+        <h4>Explanation: </h4>
+         <p>   
+            This first visualization aims to answer the following question: How do the minimum concentrations of the three different antibioticss required to prevent growth in vitro (the MIC value) for each type of bacteria compare to each other?
+        </p>
         <p>
-            Each of your three visualizations must be accompanied by a thorough defense of your design choices (~2-3 paragraphs). Document the visual encodings you used and why they are appropriate for the data. These decisions include the choice of visualization type, size, color, scale, and other visual elements, as well as the use of sorting or other data transformations. How do these decisions facilitate effective communication?
-            
-            This first visualization aims to answer the question of what MIC values are associated with each bacteria type for each of the three antibacterials.
+            In order to answer this question through a visualization, I chose to use a scatterplot to easily show the MIC values that corresponded to each type of bacteria. The bacteria names were represented in the x-axis while the MIC values were represented in the y-axis in order to allow position visual encoding to easy show MIC values that correspond to each type of bacteria for each antibiotic. The colors represented the types of antibiotics in order to allow users to immediately see which data points belonged to which antibiotic (effectively showing which antibiotics performed better for some bacteria types compared to other bacteria types).
+        </p>
+
+        <p>
+            Another visual encoding I used was shape. One of the aspects of the data set was gram staining results for each of the bacteria types. Gram-positive bacteria are more susceptible to antibiotics than gram-negative bacteria. By giving shape to the data points for each of types of bacteria, I facilitated effective communication of which types bacteria are more susceptible to antibiotics compared to other types of bacteria.
         </p>
     </div>
-
-        <div class = "secondViz">
+        
+        <!--Second Visualization + explanation-->
         <div id = "graphTwo">
         </div>
+        <div id = "explanation2">
+        <h4>Explanation: </h4>
         <p>
-            Each of your three visualizations must be accompanied by a thorough defense of your design choices (~2-3 paragraphs). Document the visual encodings you used and why they are appropriate for the data. These decisions include the choice of visualization type, size, color, scale, and other visual elements, as well as the use of sorting or other data transformations. How do these decisions facilitate effective communication?
-
-            The second visualization aims to answer the question of which of the antibacterials is most effective compared to each other for each of the bacteria types.
+            The second visualization aims to answer the following question: which of the three antibiotics is the most effective and least effective in preventing growth in vitro for each of the bacteria types?
         </p>
-    </div>
+         <p>
+            With this question in mind, I chose to use a divided bar chart to make it easier for users to see proportions (area visual encoding) to compare the performances of the three antibiotics to each other for each individual type of bacteria (with each type of bacteria represented by a bar). With the proportions, it is easy to communicate which of the three antibiotics performed the best for the particular type of bacteria (in this case, the smallest proportion of the bar performs the best because it corresponds to the lowest MIC value).
+         </p>
+         <p>
+            The other two visual encodings used were color and position. The colors represented the type of antibiotics so the user could easily differentiate the three antibiotic types and compare their values. The height/position of the bars show MIC value totals, indicating which bacteria_types are easier or harder to prevent. The positioning of each bar represents whether or not the gram staining for that particular bacteria type was positive or negative. Bacteria types with positive results were positioned in the positive realm of the graph with a positive scale and bacteria types with negative results were positioned in the negative realm of the graph with a negative scale. This makes it also very easy to see the gram stain results and understand which types bacteria are more susceptible to antibiotics compared to other types of bacteria while taking into account the proportions of each antibiotic for each type of bacteria.
+        </p>
+        </div>
 
-        <div class = "thirdViz">
+        <!--Third Visualization + explanation-->
         <div id = "graphThree">
         </div>
+        <div id = "explanation3">
+        <h4>Explanation: </h4>
         <p>
-            Each of your three visualizations must be accompanied by a thorough defense of your design choices (~2-3 paragraphs). Document the visual encodings you used and why they are appropriate for the data. These decisions include the choice of visualization type, size, color, scale, and other visual elements, as well as the use of sorting or other data transformations. How do these decisions facilitate effective communication?
-
-            The third visualization aims to answer how positive and negative values differ. Colors coordinated by positive and negative and size.
+            The third visualization aims to answer the following question: how do types of bacteria with positive and negative gram staining results compare?
+        </p>
+        <p>
+            For this question, I decided to use a scatterplot oriented horizontally (switching the x-axis and y-axis to put a different perspective on the data and focus on allowing easier comparison of size and MIC value for the different data points top to bottom. The main visual encodings for this visualization are color, area, shape, and position. Position basically indicates the performance of antibiotics through their position on the x-axis of MIC values. The shape of the data points indicates the type of antibiotic, making it easier for users to differentiate the types of data points.
+        </p>
+        <p>
+            For the color encoding, the color corresponds to the gram staining result of the data point. The colors represent which colors would show up for positive and negative results in actual experiments in the real world (violet/dark blue for positive and red for negative) to make it more intuitive for scientists that may be using this visualization. With this, users can see which bacteria types had which gram staining result. For area encoding, the size of the circles represent the total number of types of bacteria that had a positive or negative result. Because there were more types of bacteria that resulted in a negative gram stain, the negative data point circles are much bigger than the the positive data point circles to visually be able to see this information easily and thus easily compare which types bacteria are more susceptible to antibiotics compared to other types of bacteria as well as easily see the general trend in the data of more bacteria with negative gram results. 
         </p>
     </div>
 

@@ -13,3 +13,18 @@ header{
 p{
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
+
+#explanation{
+	background-color: #DA70D6;
+	padding: 2%;
+}
+
+#explanation2{
+	background-color: #ADD8E6;
+	padding: 2%;
+}
+
+#explanation3{
+	background-color: #00FF7F;
+	padding: 2%;
+}

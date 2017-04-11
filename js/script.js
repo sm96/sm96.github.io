@@ -3,12 +3,14 @@
 $(function() {
    Plotly.d3.csv('data/antibiotics-data.csv', function(err, rows){
       
+      //setting up types of antibiotics
       var antibio_name = ['Penicilin', 'Streptomycin', 'Neomycin']
       
       function unpack(rows, key) {
          return rows.map(function(row) { return row[key]; });
       }
       
+      //unpacking data from dataset and intializing
       var bacteria_type = unpack(rows, 'Bacteria'),
       pen = unpack(rows, 'Penicilin'),
       strep = unpack(rows, 'Streptomycin'),
@@ -28,6 +30,7 @@ $(function() {
          pen_log.push(newpen);
       }
       
+      //seperating positive and negative values
       for(var i = 0; i<gram.length; i++){
          if(gram[i] === "negative"){
             pen_gram_neg.push(pen_log[i]);
@@ -43,7 +46,9 @@ $(function() {
          }
       }
       
-      
+      //parts of the overall data for the visualization
+
+      //Penicilin positive data
       var firstAntiPos = {
          x: bacteria_pos,
          y: pen_gram_pos,
@@ -56,6 +61,7 @@ $(function() {
          }
       };
       
+      //Streptomycin positive data
       var secondAntiPos = {
          x: bacteria_pos,
          y: strep_gram_pos,
@@ -67,6 +73,7 @@ $(function() {
          }
       };
       
+      //Neomycin positive data
       var thirdAntiPos = {
          x: bacteria_pos,
          y: neo_gram_pos,
@@ -77,6 +84,7 @@ $(function() {
          symbol: "cross" }
       };
       
+      //Penicilin negative data
       var firstAntiNeg = {
          x: bacteria_neg,
          y: pen_gram_neg,
@@ -88,6 +96,7 @@ $(function() {
          }
       };
       
+      //Streptomycin negative data
       var secondAntiNeg = {
          x: bacteria_neg,
          y: strep_gram_neg,
@@ -98,6 +107,7 @@ $(function() {
          }
       };
       
+      //Neomycin negative data
       var thirdAntiNeg = {
          x: bacteria_neg,
          y: neo_gram_neg,
@@ -112,7 +122,7 @@ $(function() {
       var data = [ firstAntiPos, secondAntiPos, thirdAntiPos,
       firstAntiNeg, secondAntiNeg, thirdAntiNeg];
       
-      
+      //setting up layout of the visualization
       var layout = {
          title: 'Visualization 1',
          showlegend: true,
@@ -128,6 +138,7 @@ $(function() {
          width: 1300,
       };
       
+      //creating visualization with data and layout specified above
       Plotly.plot(graphOne, data, layout,{staticPlot: true});
       
    });
@@ -275,6 +286,7 @@ $(function() {
          pen_log.push(newpen);
       }
       
+      //adding counts of positive and negative results to change size of markers
       for(var i = 0; i<gram.length; i++){
          if(gram[i] === "negative"){
             pen_gram_neg.push(pen_log[i]);
@@ -291,9 +303,11 @@ $(function() {
             poscount = poscount + 1;
          }
       }
+
+      //scaling marker size to easily differentiate
       
-      var pos_scale = poscount * 6;
-      var neg_scale = negcount * 2;
+      var pos_scale = poscount * 2;
+      var neg_scale = negcount * 4;
       
       var firstAntiPos = {
          x: pen_gram_pos,
