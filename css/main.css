@@ -1,0 +1,15 @@
+@import url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css);
+
+header{
+
+	background-color: #d3d3d3;
+	min-height: 200px;
+	padding-left: 3%;
+	padding-top: 0.5%;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	text-align: center;
+}
+
+p{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
