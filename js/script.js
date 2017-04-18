@@ -1,416 +1,130 @@
-
-//First Visualization
 $(function() {
-   Plotly.d3.csv('data/antibiotics-data.csv', function(err, rows){
-      
-      //setting up types of antibiotics
-      var antibio_name = ['Penicilin', 'Streptomycin', 'Neomycin']
-      
-      function unpack(rows, key) {
-         return rows.map(function(row) { return row[key]; });
-      }
-      
-      //unpacking data from dataset and intializing
-      var bacteria_type = unpack(rows, 'Bacteria'),
-      pen = unpack(rows, 'Penicilin'),
-      strep = unpack(rows, 'Streptomycin'),
-      neo = unpack(rows, 'Neomycin'),
-      gram = unpack(rows, 'Gram.Staining')
-      pen_log = [];
-      pen_gram_neg = [];
-      pen_gram_pos = [];
-      strep_gram_neg = [];
-      strep_gram_pos = [];
-      neo_gram_neg = [];
-      neo_gram_pos = [];
-      bacteria_pos = [];
-      bacteria_neg = [];
-      for(var i = 0; i< pen.length; i++){
-         var newpen = Math.log(pen[i]);
-         pen_log.push(newpen);
-      }
-      
-      //seperating positive and negative values
-      for(var i = 0; i<gram.length; i++){
-         if(gram[i] === "negative"){
-            pen_gram_neg.push(pen_log[i]);
-            strep_gram_neg.push(strep[i]);
-            neo_gram_neg.push(neo[i]);
-            bacteria_neg.push(bacteria_type[i]);
-         }
-         else if(gram[i] === "positive"){
-            pen_gram_pos.push(pen_log[i]);
-            strep_gram_pos.push(strep[i]);
-            neo_gram_pos.push(neo[i]);
-            bacteria_pos.push(bacteria_type[i]);
-         }
-      }
-      
-      //parts of the overall data for the visualization
+    // Graph margin settings
+    var margin = {
+        top: 10,
+        right: 10,
+        bottom: 150,
+        left: 60
+    };
 
-      //Penicilin positive data
-      var firstAntiPos = {
-         x: bacteria_pos,
-         y: pen_gram_pos,
-         mode: 'markers',
-         type: 'scatter',
-         name: 'Penicilin_positive',
-         marker: {
-            size: 17,
-            symbol: "cross",
-         }
-      };
-      
-      //Streptomycin positive data
-      var secondAntiPos = {
-         x: bacteria_pos,
-         y: strep_gram_pos,
-         mode: 'markers',
-         type: 'scatter',
-         name: 'Streptomycin_positive',
-         marker: { size: 17,
-            symbol: "cross"
-         }
-      };
-      
-      //Neomycin positive data
-      var thirdAntiPos = {
-         x: bacteria_pos,
-         y: neo_gram_pos,
-         mode: 'markers',
-         type: 'scatter',
-         name: 'Neomycin_positive',
-         marker: { size: 17,
-         symbol: "cross" }
-      };
-      
-      //Penicilin negative data
-      var firstAntiNeg = {
-         x: bacteria_neg,
-         y: pen_gram_neg,
-         mode: 'markers',
-         type: 'scatter',
-         name: 'Penicilin_negative',
-         marker: {
-            size: 17,
-         }
-      };
-      
-      //Streptomycin negative data
-      var secondAntiNeg = {
-         x: bacteria_neg,
-         y: strep_gram_neg,
-         mode: 'markers',
-         type: 'scatter',
-         name: 'Streptomycin_negative',
-         marker: { size: 17
-         }
-      };
-      
-      //Neomycin negative data
-      var thirdAntiNeg = {
-         x: bacteria_neg,
-         y: neo_gram_neg,
-         mode: 'markers',
-         type: 'scatter',
-         name: 'Neomycin_negative',
-         marker: { size: 17 }
-      };
-      
-      
-      
-      var data = [ firstAntiPos, secondAntiPos, thirdAntiPos,
-      firstAntiNeg, secondAntiNeg, thirdAntiNeg];
-      
-      //setting up layout of the visualization
-      var layout = {
-         title: 'Visualization 1',
-         showlegend: true,
-         xaxis: {title: 'Bacteria Name'},
-         yaxis: {title: 'Minimum Inhibitory Concentration (MIC)', range: [-10, 43]},
-         margin: {
-            l: 50,
-            r: 50,
-            b: 120,
-            t: 120,
-         },
-         height: 800,
-         width: 1300,
-      };
-      
-      //creating visualization with data and layout specified above
-      Plotly.plot(graphOne, data, layout,{staticPlot: true});
-      
-   });
-});
+    // SVG width and height
+    var width = 960;
+    var height = 500;
 
-//Second Visualization
-$(function() {
-   Plotly.d3.csv('data/antibiotics-data.csv', function(err, rows){
-      
-      var antibio_name = ['Penicilin', 'Streptomycin', 'Neomycin']
-      
-      function unpack(rows, key) {
-         return rows.map(function(row) { return row[key]; });
-      }
-      
-      var bacteria_type = unpack(rows, 'Bacteria'),
-      pen = unpack(rows, 'Penicilin'),
-      strep = unpack(rows, 'Streptomycin'),
-      neo = unpack(rows, 'Neomycin'),
-      gram = unpack(rows, 'Gram.Staining'),
-      pen_gram_neg = [];
-      pen_gram_pos = [];
-      strep_gram_neg = [];
-      strep_gram_pos = [];
-      neo_gram_neg = [];
-      neo_gram_pos = [];
-      bacteria_pos = [];
-      bacteria_neg = [];
-      for(var i = 0; i< pen.length; i++){
-         var newpen = Math.log(pen[i]);
-         pen_log.push(newpen);
-      }
-      for(var i = 0; i<gram.length; i++){
-         if(gram[i] === "negative"){
-            pen_gram_neg.push(Math.abs(pen_log[i])*-1);
-            strep_gram_neg.push(Math.abs(strep[i])*-1);
-            neo_gram_neg.push(Math.abs(neo[i])*-1);
-            bacteria_neg.push(bacteria_type[i]);
-         }
-         else if(gram[i] === "positive"){
-            pen_gram_pos.push(Math.abs(pen_log[i]));
-            strep_gram_pos.push(Math.abs(strep[i]));
-            neo_gram_pos.push(Math.abs(neo[i]));
-            bacteria_pos.push(bacteria_type[i]);
-         }
-      }
-      
-      var firstAntiPos = {
-         x: bacteria_pos,
-         y: pen_gram_pos,
-         name: 'Penicilin',
-         type: 'bar'
-      };
-      
-      var secondAntiPos = {
-         x: bacteria_pos,
-         y: strep_gram_pos,
-         name: 'Streptomycin',
-         type: 'bar'
-      };
-      
-      var thirdAntiPos = {
-         x: bacteria_pos,
-         y: neo_gram_pos,
-         name: 'Neomycin',
-         type: 'bar'
-      };
+    // Graph width and height - accounting for margins
+    var drawWidth = width - margin.left - margin.right;
+    var drawHeight = height - margin.top - margin.bottom;
 
-      var firstAntiNeg = {
-         x: bacteria_neg,
-         y: pen_gram_neg,
-         name: 'Penicilin',
-         type: 'bar'
-      };
+    /************************************** Create chart wrappers ***************************************/
+    // Create a variable `svg` in which you store a selection of the element with id `viz`
+    // Set the width and height to your `width` and `height` variables
+        var svg = d3.select('#viz')
+            .attr('height', height)
+            .attr('width', width);
 
-      var secondAntiNeg = {
-         x: bacteria_neg,
-         y: strep_gram_neg,
-         name: 'Streptomycin',
-         type: 'bar'
-      };
+    // Append a `g` element to your svg in which you'll draw your bars. Store the element in a variable called `g`, and
+    // Transform the g using `margin.left` and `margin.top`
 
-      var thirdAntiNeg = {
-         x: bacteria_neg,
-         y: neo_gram_neg,
-         name: 'Neomycin',
-         type: 'bar'
-      };
-      
-      var data = [ firstAntiPos, secondAntiPos, thirdAntiPos,
-      firstAntiNeg, secondAntiNeg, thirdAntiNeg];
-      
-      var layout = {
-         title: 'Visualization 2',
-         xaxis: {title: 'Bacteria Name'}, 
-         yaxis: {title: 'Minimum Inhibitory Concentration (MIC)', range: [-20,40]},
-         barmode: 'stack',
-         margin: {
-            l: 50,
-            r: 50,
-            b: 120,
-            t: 120,
-         },
-         height: 800,
-         width: 1300,
-      };
-      
-      
-      
-      Plotly.plot(graphTwo, data, layout,{staticPlot: true});
-      
-   });
-});
+        var g = svg.append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-//Visualization 3
 
-$(function() {
-   Plotly.d3.csv('data/antibiotics-data.csv', function(err, rows){
-      
-      var antibio_name = ['Penicilin', 'Streptomycin', 'Neomycin']
-      
-      function unpack(rows, key) {
-         return rows.map(function(row) { return row[key]; });
-      }
-      
-      var bacteria_type = unpack(rows, 'Bacteria'),
-      pen = unpack(rows, 'Penicilin'),
-      strep = unpack(rows, 'Streptomycin'),
-      neo = unpack(rows, 'Neomycin'),
-      gram = unpack(rows, 'Gram.Staining'),
-      pen_log = [];
-      pen_gram_neg = [];
-      pen_gram_pos = [];
-      strep_gram_neg = [];
-      strep_gram_pos = [];
-      neo_gram_neg = [];
-      neo_gram_pos = [];
-      bacteria_pos = [];
-      bacteria_neg = [];
-      var poscount = 0;
-      var negcount = 0;
-      
-      for(var i = 0; i< pen.length; i++){
-         var newpen = Math.log(pen[i]);
-         pen_log.push(newpen);
-      }
-      
-      //adding counts of positive and negative results to change size of markers
-      for(var i = 0; i<gram.length; i++){
-         if(gram[i] === "negative"){
-            pen_gram_neg.push(pen_log[i]);
-            strep_gram_neg.push(strep[i]);
-            neo_gram_neg.push(neo[i]);
-            bacteria_neg.push(bacteria_type[i]);
-            negcount = negcount + 1;
-         }
-         else{
-            pen_gram_pos.push(pen_log[i]);
-            strep_gram_pos.push(strep[i]);
-            neo_gram_pos.push(neo[i]);
-            bacteria_pos.push(bacteria_type[i]);
-            poscount = poscount + 1;
-         }
-      }
+    // Load data in using d3's csv function.
+        d3.csv('data/airbnb.csv', function(error, data) {
 
-      //scaling marker size to easily differentiate
-      
-      var pos_scale = poscount * 2;
-      var neg_scale = negcount * 4;
-      
-      var firstAntiPos = {
-         x: pen_gram_pos,
-         y: bacteria_pos,
-         mode: 'markers',
-         type: 'scatter',
-         name: 'Penicilin_positive',
-         marker: {
-            size: pos_scale,
-            color: 'rgb(148,0,211)',
-         }
-      };
-      
-      var secondAntiPos = {
-         x: strep_gram_pos,
-         y: bacteria_pos,
-         mode: 'markers',
-         type: 'scatter',
-         name: 'Streptomycin_positive',
-         marker: {
-            size: pos_scale,
-            color: 'rgb(148,0,211)',
-            symbol: "circle-open-dot",
-         }
-      };
-      
-      var thirdAntiPos = {
-         x: neo_gram_pos,
-         y: bacteria_pos,
-         mode: 'markers',
-         type: 'scatter',
-         name: 'Neomycin_positive',
-         marker: {
-            size: pos_scale,
-            color: 'rgb (148,0,211)',
-            symbol: "circle-x-open",
-         }
-      };
-      
-      var firstAntiNeg = {
-         x: pen_gram_neg,
-         y: bacteria_neg,
-         mode: 'markers',
-         type: 'scatter',
-         name: 'Penicilin_negative',
-         marker: {
-            size: neg_scale,
-            color: 'rgb(255,0,0)',
-         }
-      };
-      
-      var secondAntiNeg = {
-         x: strep_gram_neg,
-         y: bacteria_neg,
-         mode: 'markers',
-         type: 'scatter',
-         name: 'Streptomycin_negative',
-         marker: {
-            size: neg_scale,
-            color: 'rgb(255,0,0)',
-            symbol: "circle-open-dot",
-         }
-      };
-      
-      var thirdAntiNeg = {
-         x: neo_gram_neg,
-         y: bacteria_neg,
-         mode: 'markers',
-         type: 'scatter',
-         name: 'Neomycin_negative',
-         marker: {
-            size: neg_scale,
-            color: 'rgb(255,0,0)',
-            symbol: "circle-x-open",
-         }
-      };
-      
-      var data = [ firstAntiPos, secondAntiPos, thirdAntiPos,
-      firstAntiNeg, secondAntiNeg, thirdAntiNeg];
-      
-      var layout = {
-         title: 'Visualization 3',
-         yaxis: {title: 'Bacteria Name'},
-         margin:{
-            l:200,
-            },
-         xaxis: {
-            title: 'Minimum Inhibitory Concentration (MIC)',
-            showgrid: false,
-            showline: true,
-            },
-            tickfont: {
-               font: {
-                  color: 'rgb(102, 102, 102)'
-               }
-            },
-         height: 800,
-         width: 1300,
-         paper_bgcolor: 'rgb(254, 247, 234)',
-         plot_bgcolor: 'rgb(254, 247, 234)',
 
-      };
-      
-      Plotly.newPlot('graphThree', data, layout, {staticPlot: true});
-   });
+        /************************************** Data prep ***************************************/
+
+        // You'll need to *aggregate* the data such that, for each device-app combo, you have the *count* of the number of occurances
+        // Lots of ways to do it, but here's a slick d3 approach: 
+        // http://www.d3noob.org/2014/02/grouping-and-summing-data-using-d3nest.html
+
+            var csvdata = d3.nest()
+            .key(function(d) { return d.dim_device_app_combo;}) 
+            .rollup(function(v){return v.length;})
+            .entries(data);
+        /************************************** Defining scales and axes ***************************************/
+
+        // Create an `xScale` for positioning the bars horizontally. Given the data type, `d3.scaleBand` is a good approach.
+            var xScale = d3.scaleBand()
+            .range([0,drawWidth])
+            .domain(csvdata.map(function(d){return d.key;}))
+            .padding(0.1);
+
+        // Using `d3.axisBottom`, create an `xAxis` object that holds can be later rendered in a `g` element
+        // Make sure to set the scale as your `xScale`
+            var xAxis = d3.axisBottom()
+                .scale(xScale);
+
+        // Create a variable that stores the maximum count using `d3.max`, and multiply this valu by 1.1
+        // to create some breathing room in the top of the graph.
+            var count = d3.max(csvdata, function(d){return d.value}) * 1.1;
+
+        // Create a `yScale` for drawing the heights of the bars. Given the data type, `d3.scaleLinear` is a good approach.
+            var yScale = d3.scaleLinear()
+            .range([drawHeight, 0])
+            .domain([0, count]);
+
+        // Using `d3.axisLeft`, create a `yAxis` object that holds can be later rendered in a `g` element
+        // Make sure to set the scale as your `yScale`
+
+            var yAxis = d3.axisLeft()
+            .scale(yScale)
+            .tickFormat(d3.format('.2s'));
+
+        /************************************** Rendering Axes and Axis Labels ***************************************/
+
+        // Create an `xAxisLabel` by appending a `g` element to your `svg` variable and give it a class called 'axis'.
+        // Transform the `g` element so that it will be properly positioned (need to shift x and y position)
+        // Finally, use the `.call` method to render your `xAxis` in your `xAxisLabel`        
+            var xAxisLabel = svg.append('g')
+            .attr('transform', 'translate(' + margin.left + ',' + (drawHeight + margin.top) + ')')
+            .attr('class', 'axis')
+            .call(xAxis);
+
+        // To rotate the text elements, select all of the `text` elements in your `xAxisLabel and rotate them 45 degrees        
+        // This may help: https://bl.ocks.org/mbostock/4403522
+
+            xAxisLabel.selectAll('text')
+            .attr("transform", 'translate(-12,60)rotate(-90)');
+
+        // Create a text element to label your x-axis by appending a text element to your `svg` 
+        // You'll need to use the `transform` property to position it below the chart
+        // Set its class to 'axis-label', and set the text to "Device-App Combinations"
+
+            var textElementX = svg.append('text')
+            .attr('transform', 'translate(' + (drawWidth/2) + ',' + (drawHeight + margin.top + 140) + ')')
+            .attr('class', 'axis-label')
+            .text('Device-App Combinations');
+        // Using the same pattern as your x-axis, append another g element and create a y-axis for your graph
+            var yAxisLabel = svg.append('g')
+            .attr('class', 'axis')
+            .attr('transform', 'translate(' + margin.left + ',' + (margin.top) + ')')
+            .call(yAxis);
+
+        // Using the same pattern as your x-axis, append a text element to label your y axis
+        // Set its class to 'axis-label', and set the text to "Count"
+
+            var textElementY = svg.append('text')
+            .attr('transform', 'translate(' + (margin.left - 45) + ',' + (drawHeight/2 + margin.top) + ') rotate(-90)')
+            .attr('class', 'axis-label')
+            .text('Count');
+        /************************************** Drawing Data ***************************************/
+        // Select all elements with the class 'bar' in your `g` element. Then, conduct a data-join
+        // with your parsedData array to append 'rect' elements with the class set as 'bar'
+           g.selectAll('.bar').data(csvdata)
+
+        // Determine which elements are new to the screen (`enter`), and for each element, 
+        // Append a `rect` element, setting the `x`, `y`, `width`, and `height` attributes using your data and scales
+            .enter()
+            .append('rect')
+            .attr('class', 'bar')
+            .attr('x', function(d){return xScale(d.key)})
+            .attr('y', function(d){return yScale(d.value)})
+            .attr('width', xScale.bandwidth()) 
+            .attr('height', function(d){return drawHeight - yScale(d.value)})
+            .exit()
+            .remove();
+
+    });
 });
