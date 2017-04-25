@@ -1,8 +1,6 @@
-/* Create a treemap of country level measures. Inspiration drawn from https://bl.ocks.org/mbostock/4063582.
- */
 $(function() {
     // Read in your data. On success, run the rest of your code
-    d3.csv('data/prepped_data.csv', function(error, data) {
+    d3.csv('data/Global_Health_Spending.csv', function(error, data) {
 
         // Setting defaults
         var margin = {
@@ -11,106 +9,93 @@ $(function() {
                 bottom: 10,
                 left: 10
             },
-            diameter = 960,
-            format = d3.format(",d"),
-            width = 960,
-            height = 500,
+
+            width = 1085,
+            height = 900,
             drawWidth = width - margin.left - margin.right,
             drawHeight = height - margin.top - margin.bottom,
-            measure = 'fertility_rate'; // variable to visualize
+            measure = 'General government expenditure'; // variable to visualize
 
-        // Append a wrapper div for the chart
+          
         var svg = d3.select('#vis')
-            .append("svg")
-            .attr('height', diameter)
-            .attr('width', diameter);
-            //.style("left", margin.left + "px")
-            //.style("top", margin.top + "px");
-        var g = svg.append('g');
-        /* ********************************** Create hierarchical data structure & treemap function  ********************************** */
+            .append("div")
+            .attr('height', height)
+            .attr('width', width)
+            .style("left", margin.left + "px")
+            .style("top", margin.top + "px");
+        
 
-        // Nest your data *by region* using d3.nest()
         var nestedData = d3.nest()
-            .key(function(d) {
-                return d.region;
-            })
             .entries(data);
 
-        // Define a hierarchy for your data
+        // Defining a hierarchy for data
         var root = d3.hierarchy({
             values: nestedData
         }, function(d) {
             return d.values;
         })
-        .sort(function(a,b){
-            return b.value - a.value;
-        });
 
+        // Creating treemap function to compute data structure layout
 
-        // Create a *treemap function* that will compute your layout given your data structure
-        /*
-        var treemap = d3.treemap() // function that returns a function!
-            .size([width, height]) // set size: scaling will be done internally
-            .round(true)
-            .tile(d3.treemapResquarify)
-            .padding(0);
-        */
-        var packlayout = d3.pack()
-        .size([diameter, diameter]);
+        var treemap = d3.treemap()
+        .size([width,height])
+        .round(true)
+        .tile(d3.treemapResquarify)
+        .padding(0);
 
-        /* ********************************** Create an ordinal color scale  ********************************** */
+        // Setting ordinal scale for colors
+        var colorScale = d3.scaleOrdinal().range(d3.schemeCategory10);
+        
 
-        // Get list of regions for colors
-        var regions = nestedData.map(function(d) {
-            return d.key;
-        });
-
-        // Set an ordinal scale for colors
-        var colorScale = d3.scaleOrdinal().domain(regions).range(d3.schemeCategory10);
-
-        /* ********************************** Write a function to perform the data-join  ********************************** */
-
-        // Write your `draw` function to bind data, and position elements
+        // function to bind data and position elements
         var draw = function() {
-
-            // Redefine which value you want to visualize in your data by using the `.sum()` method
-            root.sum(function(d) {
+            
+            // Redefining value to visualize 
+            measure_val = root.sum(function(d) {
                 return +d[measure];
             });
 
-            // (Re)build your treemap data structure by passing your `root` to your `treemap` function
-            packlayout(root);
+            // Building treemap
+            treemap(root);
 
-            // Bind your data to a selection of elements with class node
-            // The data that you want to join is array of elements returned by `root.leaves()`
-            var nodes = g.selectAll(".node").data(root.leaves());
+            // Binding data to nodes
+            var nodes = svg.selectAll(".node").data(root.leaves());
 
-            // Enter and append elements, then position them using the appropriate *styles*
+            // Entering and appending elements as well as styling them
             nodes.enter()
-                .append("circle")
+                .append("div")
                 .text(function(d) {
-                    return d.data.country_code;
+                    return d.data.Location.substring(0, width).toUpperCase(); 
                 })
                 .merge(nodes)
                 .attr('class', 'node')
                 .transition().duration(1500)
-                .attr('cx', function(d) { return d.x })
-                .attr('cy', function(d) { return d.y })
-                .attr('r', function(d) { return d.r })
-                .style("fill", function(d, i) {
-                    return colorScale(d.data.region);
+                .style("left", function(d, i) {
+                    return d.x0 + "px";
+                })
+                .style("top", function(d) {
+                    return d.y0 + "px";
+                })
+                .style('width', function(d) {
+                    return d.x1 - d.x0 + 'px';
+                })
+                .style("height", function(d) {
+                    return d.y1 - d.y0 + "px";
+                })
+                .style("background", function(d, i) {
+                    return colorScale(d.data.Location);
                 });
+
         };
 
-        // Call your draw function
         draw();
 
-        // Listen to change events on the input elements
+        // Updating based on button clicked to showcase subset of data
         $("input").on('change', function() {
-            // Set your measure variable to the value (which is used in the draw funciton)
+            //setting measure based on button clicked
             measure = $(this).val();
 
-            // Draw your elements
+            // draw elements
             draw();
         });
     });
