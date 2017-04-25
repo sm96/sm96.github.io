@@ -12,7 +12,7 @@ $(function() {
             },
 
             width = 1085,
-            height = 900,
+            height = 750,
             drawWidth = width - margin.left - margin.right,
             drawHeight = height - margin.top - margin.bottom,
             measure = 'General government expenditure'; // variable to visualize
