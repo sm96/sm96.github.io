@@ -1,4 +1,5 @@
 $(function() {
+     
     // Read in your data. On success, run the rest of your code
     d3.csv('data/Global_Health_Spending.csv', function(error, data) {
 
